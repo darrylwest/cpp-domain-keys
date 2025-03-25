@@ -7,6 +7,7 @@
 #include <print>
 #include <chrono>
 #include <iomanip>
+#include <set>
 
 auto date_to_timestamp(const int year, const int month = 12, const int day = 31) {
     std::tm tm = {0};
@@ -36,13 +37,11 @@ TEST_CASE("Library Version", "[version]") {
 TEST_CASE("TimestampKeys constructed", "[keys][txkey]") {
     domainkeys::keys::TimestampKey key("123456789012");
     REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
-    REQUIRE(true);
 }
 
 TEST_CASE("RouteKeys can be constructed", "[keys][rtkey]") {
     domainkeys::keys::RouteKey key("1234567890123456");
     REQUIRE(key.size() == domainkeys::keys::RTKEY_SIZE);
-    REQUIRE(true);
 }
 
 TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
@@ -57,7 +56,7 @@ TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
 
     year = 2300;
     auto future_date = date_to_timestamp(year, 12, 31);
-    std::println("future: {}-{}-{} ts: {}", year, 12, 31, future_date);
+    // std::println("future: {}-{}-{} ts: {}", year, 12, 31, future_date);
 
     sdt = std::to_string(future_date);
 
@@ -65,6 +64,19 @@ TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
     REQUIRE(sdt.size() == 17);
 }
 
-// TODO test base62 for int = 3843; should == zz
+TEST_CASE("TimestapKeys create", "[tskey-create]") {
+    const size_t count = 1000;
+    std::set<std::string> keys;
+
+    for (int i = 0; i < count; i++) {
+        auto key = domainkeys::keys::create_timestamp_key();
+        // std::println("key: {}", key.to_string());
+        REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
+        keys.insert(key.to_string());
+    }
+
+    INFO("test the number of keys created, should equal the count to ensure uniqueness");
+    REQUIRE(keys.size() == count);
+}
 // TODO test timestamp key length for dates between 2020 and 2300 to ensure 12 chars
 // TODO test route key length for dates between 2020 and 2300 to ensure 16 chars

@@ -10,7 +10,7 @@
 #include <ctime>
 
 namespace domainkeys::keys {
-    constexpr std::string_view VERSION = "0.5.1-100";
+    constexpr std::string_view VERSION = "0.5.1-103";
     constexpr size_t TXKEY_SIZE = 12;
     constexpr size_t RTKEY_SIZE = 16;
 
