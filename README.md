@@ -78,7 +78,8 @@ If you need to generate a key that is truely globally unique, then use UUID, pro
 ### API
 
 * domainkeys::keys::create_timestamp_key() -> TimestampKey
-* domainkeys::keys::create_route_key(route) -> RouteKey
+* domainkeys::keys::create_route_key(std::string route = "") -> RouteKey
+* domainkeys::keys::create_random_key(std::size_t size = 16) -> RouteKey
 
 _NOTE: ported from previous related projects in rust, elixir/erlang, and go._
 
