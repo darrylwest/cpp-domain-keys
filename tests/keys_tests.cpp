@@ -47,7 +47,7 @@ TEST_CASE("RouteKeys can be constructed", "[keys][rtkey]") {
 TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
     int year = 2020;
     auto past_date = date_to_timestamp(year, 1, 1);
-    std::println("past: {}-{}-{} {}", year, 12, 31, past_date);
+    // std::println("past: {}-{}-{} {}", year, 12, 31, past_date);
 
     auto sdt = std::to_string(past_date);
 
@@ -64,7 +64,7 @@ TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
     REQUIRE(sdt.size() == 17);
 }
 
-TEST_CASE("TimestapKeys create", "[tskey-create]") {
+TEST_CASE("TimestapKeys create", "[keys][txkey-create]") {
     const size_t count = 1000;
     std::set<std::string> keys;
 
@@ -75,8 +75,56 @@ TEST_CASE("TimestapKeys create", "[tskey-create]") {
         keys.insert(key.to_string());
     }
 
-    INFO("test the number of keys created, should equal the count to ensure uniqueness");
+    INFO("test the number of txkeys created, should equal the count to ensure uniqueness");
     REQUIRE(keys.size() == count);
 }
-// TODO test timestamp key length for dates between 2020 and 2300 to ensure 12 chars
-// TODO test route key length for dates between 2020 and 2300 to ensure 16 chars
+
+TEST_CASE("RouteKey create", "[keys][rtkey-create-no-route]") {
+    const size_t count = 1000;
+    std::set<std::string> keys;
+
+    for (int i = 0; i < count; i++) {
+        auto key = domainkeys::keys::create_route_key();
+        // std::println("key: {}", key.to_string());
+        REQUIRE(key.size() == domainkeys::keys::RTKEY_SIZE);
+        keys.insert(key.to_string());
+    }
+
+    INFO("test the number of rtkeys created, should equal the count to ensure uniqueness");
+    REQUIRE(keys.size() == count);
+}
+
+TEST_CASE("RouteKey create", "[keys][rtkey-create-with-route]") {
+    const size_t count = 1000;
+    std::set<std::string> keys;
+    std::string route = "test";
+
+    for (int i = 0; i < count; i++) {
+        auto key = domainkeys::keys::create_route_key(route);
+        // std::println("key: {}", key.to_string());
+        REQUIRE(key.size() == domainkeys::keys::RTKEY_SIZE);
+        keys.insert(key.to_string());
+        REQUIRE(key.to_string().starts_with(route));
+    }
+
+    INFO("test the number of routed rtkeys created, should equal the count to ensure uniqueness");
+    REQUIRE(keys.size() == count);
+}
+
+TEST_CASE("RouteKey create", "[keys][rtkey-partial-route]") {
+    const size_t count = 1000;
+    std::set<std::string> keys;
+    std::string route = "01";
+
+    for (int i = 0; i < count; i++) {
+        auto key = domainkeys::keys::create_route_key(route);
+        // std::println("key: {}", key.to_string());
+        REQUIRE(key.size() == domainkeys::keys::RTKEY_SIZE);
+        REQUIRE(key.to_string().starts_with(route));
+        keys.insert(key.to_string());
+    }
+
+    INFO("test the number of routed rtkeys created, should equal the count to ensure uniqueness");
+    REQUIRE(keys.size() == count);
+
+}

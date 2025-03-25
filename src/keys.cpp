@@ -43,12 +43,13 @@ namespace domainkeys::keys {
 
     // create the route key
     RouteKey create_route_key(const std::string& route) {
-        auto key = create_timestamp_key().to_string();
-        if (route.empty()) {
-            auto rt = "1234";
-            return RouteKey(rt + key);
-        } else {
-            return RouteKey("1234567890123456");
+        std::string rt = route;
+        while (rt.size() < 4) {
+            int n = random_int(0, 61);
+            rt.append(1, base62::base62_chars[n]);
         }
+
+        auto tx = create_timestamp_key().to_string();
+        return RouteKey(rt + tx);
     }
 } // namespace domainkeys::keys
