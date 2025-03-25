@@ -8,7 +8,7 @@ set -eu
 
 export root=`pwd`
 
-export project=quickkv
+export project=domainkeys
 export port=9696
 
 export verbose=''
@@ -67,7 +67,7 @@ do
             shift
         ;;
         format)
-            clang-format -i include/quickkv/*.hpp src/*.cpp
+            clang-format -i include/domainkeys/*.hpp src/*.cpp
             git status -s
 
             shift

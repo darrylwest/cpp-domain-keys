@@ -2,17 +2,17 @@
 // 2025-03-24 17:01:53 dpw
 //
 #include <chrono>
-#include <random>
-#include <domainkeys/keys.hpp>
 #include <domainkeys/base62.hpp>
+#include <domainkeys/keys.hpp>
 #include <print>
+#include <random>
 
 namespace domainkeys::keys {
     // the min/max keeps the base62 encodeing to 3 chars 100..zzz
     constexpr int BASE62_MIN = 3844;
     constexpr int BASE62_MAX = 238327;
 
-    inline std::random_device random_device;  // Obtain a random number from hardware
+    inline std::random_device random_device; // Obtain a random number from hardware
     inline std::mt19937 generator(random_device());
 
     inline auto random_int(int min = BASE62_MIN, int max = BASE62_MAX) {
@@ -42,7 +42,7 @@ namespace domainkeys::keys {
     }
 
     // create the route key
-    RouteKey create_route_key(const std::string& route) {
+    RouteKey create_route_key(const std::string &route) {
         std::string rt = route;
         while (rt.size() < 4) {
             int n = random_int(0, 61);
@@ -61,6 +61,5 @@ namespace domainkeys::keys {
             key.push_back(base62::base62_chars[random_int(0, 61)]);
         }
         return key;
-
     }
 } // namespace domainkeys::keys

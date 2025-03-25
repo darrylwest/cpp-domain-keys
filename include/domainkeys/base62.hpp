@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <string>
 #include <algorithm>
+#include <string>
 
 
 namespace domainkeys::base62 {
@@ -27,4 +27,4 @@ namespace domainkeys::base62 {
         std::reverse(result.begin(), result.end());
         return result;
     }
-}
+} // namespace domainkeys::base62
