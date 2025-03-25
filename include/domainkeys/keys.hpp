@@ -7,6 +7,7 @@
 #include <array>
 #include <string>
 #include <stdexcept>
+#include <ctime>
 
 namespace domainkeys::keys {
     constexpr size_t TXKEY_SIZE = 12;
@@ -69,4 +70,7 @@ namespace domainkeys::keys {
 
     // create the route key
     RouteKey create_route_key();
+
+    // return current timestamp for now in microseconds
+    std::time_t now_microseconds();
 }
