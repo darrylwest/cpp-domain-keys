@@ -10,7 +10,7 @@
 #include <ctime>
 
 namespace domainkeys::keys {
-    constexpr std::string_view VERSION = "0.5.1-104";
+    constexpr std::string_view VERSION = "0.5.2-105";
     constexpr size_t TXKEY_SIZE = 12;
     constexpr size_t RTKEY_SIZE = 16;
 
@@ -71,6 +71,9 @@ namespace domainkeys::keys {
 
     // create the route key
     RouteKey create_route_key(const std::string& route = "");
+
+    // create a ramdom base62 key of a specified length
+    std::string create_random_key(size_t size = 16);
 
     // return current timestamp for now in microseconds
     std::time_t now_microseconds();

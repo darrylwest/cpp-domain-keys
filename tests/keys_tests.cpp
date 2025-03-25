@@ -28,7 +28,7 @@ auto date_to_timestamp(const int year, const int month = 12, const int day = 31)
 }
 
 TEST_CASE("Library Version", "[version]") {
-    REQUIRE(domainkeys::keys::VERSION >= "0.5.1-100");
+    REQUIRE(domainkeys::keys::VERSION >= "0.5.2-105");
     std::string version = std::string(domainkeys::keys::VERSION);
     REQUIRE(version.size() >= 8);
     REQUIRE(version.starts_with("0.5"));
@@ -39,9 +39,31 @@ TEST_CASE("TimestampKeys constructed", "[keys][txkey]") {
     REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
 }
 
+TEST_CASE("TimestampKeys constructed", "[keys][bad-size]") {
+    INFO("test the size of the timestamp key with a bad size; should throw");
+
+    try {
+        domainkeys::keys::TimestampKey("12345");
+        REQUIRE(false);
+    } catch (std::runtime_error& e) {
+        REQUIRE(true);
+    }
+}
+
 TEST_CASE("RouteKeys can be constructed", "[keys][rtkey]") {
     domainkeys::keys::RouteKey key("1234567890123456");
     REQUIRE(key.size() == domainkeys::keys::RTKEY_SIZE);
+}
+
+TEST_CASE("RouteKeys constructed", "[keys][bad-size]") {
+    INFO("test the size of the route key with a bad size; should throw");
+
+    try {
+        domainkeys::keys::RouteKey("TOO-TOO-BIG-TO-BE-VALID");
+        REQUIRE(false);
+    } catch (std::runtime_error& e) {
+        REQUIRE(true);
+    }
 }
 
 TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
@@ -126,5 +148,31 @@ TEST_CASE("RouteKey create", "[keys][rtkey-partial-route]") {
 
     INFO("test the number of routed rtkeys created, should equal the count to ensure uniqueness");
     REQUIRE(keys.size() == count);
+}
 
+TEST_CASE("RandomKey create", "[keys][ramdom-create]") {
+    std::string key = domainkeys::keys::create_random_key();
+    INFO("test the size of the random key with default size of 16");
+    REQUIRE(key.size() == 16);
+
+    size_t size = 8;
+    key = domainkeys::keys::create_random_key(size);
+    INFO("test the size of the random key with specified size of 8");
+    REQUIRE(key.size() == size);
+}
+
+TEST_CASE("RandomKey create", "[keys][random-unique]") {
+    const size_t count = 1000;
+    std::set<std::string> keys;
+    size_t size = 12;
+
+    for (int i = 0; i < count; i++) {
+        auto key = domainkeys::keys::create_random_key(size);
+        // std::println("key: {}", key.to_string());
+        REQUIRE(key.size() == size);
+        keys.insert(key);
+    }
+
+    INFO("test the number of random keys created, should equal the count to ensure uniqueness");
+    REQUIRE(keys.size() == count);
 }

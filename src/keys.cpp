@@ -52,4 +52,15 @@ namespace domainkeys::keys {
         auto tx = create_timestamp_key().to_string();
         return RouteKey(rt + tx);
     }
+
+    // create a random key the lenth specified by size
+    std::string create_random_key(size_t size) {
+        std::string key;
+        key.reserve(size);
+        for (size_t i = 0; i < size; i++) {
+            key.push_back(base62::base62_chars[random_int(0, 61)]);
+        }
+        return key;
+
+    }
 } // namespace domainkeys::keys
