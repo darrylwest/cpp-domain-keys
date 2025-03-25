@@ -26,6 +26,13 @@ auto date_to_timestamp(const int year, const int month = 12, const int day = 31)
     return std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
 }
 
+TEST_CASE("Library Version", "[version]") {
+    REQUIRE(domainkeys::keys::VERSION >= "0.5.1-100");
+    std::string version = std::string(domainkeys::keys::VERSION);
+    REQUIRE(version.size() >= 8);
+    REQUIRE(version.starts_with("0.5"));
+}
+
 TEST_CASE("TimestampKeys constructed", "[keys][txkey]") {
     domainkeys::keys::TimestampKey key("123456789012");
     REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
@@ -38,15 +45,26 @@ TEST_CASE("RouteKeys can be constructed", "[keys][rtkey]") {
     REQUIRE(true);
 }
 
-TEST_CASE("TimstampKeys min/max", "[keys][txkey-max]") {
-    auto now = domainkeys::keys::now_microseconds();
-    std::println("now: {}", now);
+TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
+    int year = 2020;
+    auto past_date = date_to_timestamp(year, 1, 1);
+    std::println("past: {}-{}-{} {}", year, 12, 31, past_date);
 
-    int year = 2300;
+    auto sdt = std::to_string(past_date);
+
+    INFO("test the string length of past date to ensure it's 16 chars");
+    REQUIRE(sdt.size() == 16);
+
+    year = 2300;
     auto future_date = date_to_timestamp(year, 12, 31);
     std::println("future: {}-{}-{} ts: {}", year, 12, 31, future_date);
 
-    REQUIRE(true);
+    sdt = std::to_string(future_date);
+
+    INFO("test the string length of the future date to ensure it's 17 chars");
+    REQUIRE(sdt.size() == 17);
 }
 
 // TODO test base62 for int = 3843; should == zz
+// TODO test timestamp key length for dates between 2020 and 2300 to ensure 12 chars
+// TODO test route key length for dates between 2020 and 2300 to ensure 16 chars
