@@ -6,6 +6,7 @@
 
 #include <array>
 #include <string>
+#include <stdexcept>
 
 namespace domainkeys::keys {
     constexpr size_t TXKEY_SIZE = 12;
