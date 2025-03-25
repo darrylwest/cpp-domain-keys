@@ -6,13 +6,13 @@
 #include <catch2/catch_all.hpp>  // For Catch2 v3
 
 TEST_CASE("TimestampKeys constructed", "[keys][txkey]") {
-    domainkeys::keys::TimestampKey key{};
+    domainkeys::keys::TimestampKey key("123456789012");
     REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
     REQUIRE(true);
 }
 
 TEST_CASE("RouteKeys can be constructed", "[keys][rtkey]") {
-    domainkeys::keys::RouteKey key{};
+    domainkeys::keys::RouteKey key("1234567890123456");
     REQUIRE(key.size() == domainkeys::keys::RTKEY_SIZE);
     REQUIRE(true);
 }

@@ -11,5 +11,7 @@ int main() {
     const auto key = domainkeys::keys::create_timestamp_key();
     std::println("ts key size: {}", key.size());
 
+    std::println("ts key: {}", key.to_string());
+
     return 0;
 }

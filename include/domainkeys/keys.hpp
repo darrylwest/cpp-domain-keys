@@ -5,6 +5,7 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 namespace domainkeys::keys {
     constexpr size_t TXKEY_SIZE = 12;
@@ -12,8 +13,16 @@ namespace domainkeys::keys {
 
     // timestamp key with microsecond timestamp + 4 byte random bytes converted to base62
     struct TimestampKey {
-        std::array<char, TXKEY_SIZE> data;
+        std::array<char, TXKEY_SIZE> data{};
         [[nodiscard]] size_t size() const { return data.size(); };
+
+        // construct from a string of exactly 12 chars
+        explicit TimestampKey(const std::string& str) {
+            if (str.size() != TXKEY_SIZE) {
+                throw std::runtime_error("invalid timestamp key size");
+            }
+            std::copy(str.begin(), str.end(), data.begin());
+        }
 
         [[nodiscard]] constexpr auto begin() const {
             return data.begin();
@@ -22,12 +31,24 @@ namespace domainkeys::keys {
         [[nodiscard]] constexpr auto end() const {
             return data.begin() + TXKEY_SIZE;
         }
+
+        [[nodiscard]] std::string to_string() const {
+            return {data.data(), TXKEY_SIZE};
+        };
     };
 
     // routing key with 4 byte route, microsecond timestamp + 4 byte random bytes converted to base62
     struct RouteKey {
-        std::array<char, RTKEY_SIZE> data;
+        std::array<char, RTKEY_SIZE> data{};
         [[nodiscard]] size_t size() const { return data.size(); };
+
+        // construct from a string of exactly 16 chars
+        explicit RouteKey(const std::string& str) {
+            if (str.size() != RTKEY_SIZE) {
+                throw std::runtime_error("invalid timestamp key size");
+            }
+            std::copy(str.begin(), str.end(), data.begin());
+        }
 
         [[nodiscard]] constexpr auto begin() const {
             return data.begin();
@@ -36,6 +57,10 @@ namespace domainkeys::keys {
         [[nodiscard]] constexpr auto end() const {
             return data.begin() + TXKEY_SIZE;
         }
+
+        [[nodiscard]] std::string to_string() const {
+            return {data.data(), RTKEY_SIZE};
+        };
     };
 
     // create a new timestamp key
