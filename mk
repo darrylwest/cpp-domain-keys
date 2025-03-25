@@ -11,6 +11,8 @@ export root=`pwd`
 export project=quickkv
 export port=9696
 
+export verbose=''
+
 export os="$(uname -s)"
 export arch="$(uname -m)"
 
@@ -41,7 +43,7 @@ do
         build)
             clear
 
-            (cd build && time make $FLAGS || exit 1)
+            (cd build && time make ${verbose} $FLAGS || exit 1)
 
             shift
         ;;
@@ -86,7 +88,7 @@ do
             exit 0
         ;;
         exam*)
-            for f in ./build/examples/*
+            for f in build/examples/*
             do
                 ./$f
             done

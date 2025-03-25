@@ -21,6 +21,9 @@ endif()
 
 find_package(Catch2 3 REQUIRED)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
 # Enable testing
 option(ENABLE_TESTS "Build tests" ON)
 if (ENABLE_TESTS)
@@ -43,21 +46,24 @@ target_include_directories(domainkeys PUBLIC
         $<INSTALL_INTERFACE:include>
 )
 
-## Add examples
-#file(GLOB EXAMPLE_SOURCES examples/*.cpp)
-#
-#foreach(EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
-#    get_filename_component(EXAMPLE_NAME ${EXAMPLE_SOURCE} NAME_WE)
-#    add_executable(${EXAMPLE_NAME} ${EXAMPLE_SOURCE}
-#            examples/txkey.cpp
-#            examples/rtkey.cpp)
-#
-#    set_target_properties(${EXAMPLE_NAME} PROPERTIES
-#            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
-#    )
-#
-#    target_link_libraries(${EXAMPLE_NAME} PRIVATE domainkeys)
-#endforeach()
+# Add examples
+file(GLOB EXAMPLE_SOURCES examples/*.cpp)
+
+foreach(EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
+    get_filename_component(EXAMPLE_NAME ${EXAMPLE_SOURCE} NAME_WE)
+    add_executable(${EXAMPLE_NAME} ${EXAMPLE_SOURCE})
+
+    set_target_properties(${EXAMPLE_NAME} PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
+    )
+
+    # Link the domainkeys library to the examples -- this will include the headers
+    target_link_libraries(${EXAMPLE_NAME} PRIVATE domainkeys)
+
+    # Include the header directory explicitly if not inherited
+    target_include_directories(${EXAMPLE_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+endforeach()
+
 
 # Installation rules
 install(DIRECTORY include/ DESTINATION include)

@@ -2,11 +2,14 @@
 // Created by Darryl West on 3/24/25.
 //
 
-#include <domainkeys/keys.hpp>
+// #include <domainkeys/keys.hpp>
 #include <print>
 
+#include <domainkeys/keys.hpp>
+
 int main() {
-    std::puts("A Tx Key example");
+    const auto key = domainkeys::keys::create_timestamp_key();
+    std::println("ts key size: {}", key.size());
 
     return 0;
 }

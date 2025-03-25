@@ -6,12 +6,8 @@
 namespace domainkeys::keys {
 
     // create a new timestamp key
-    constexpr TimestampKey create_timestamp_key() {
-        return TimestampKey();
-    }
+    TimestampKey create_timestamp_key() { return TimestampKey{}; }
 
     // create the route key
-    constexpr RouteKey create_route_key() {
-        return RouteKey();
-    }
-}
+    RouteKey create_route_key() { return RouteKey{}; }
+} // namespace domainkeys::keys

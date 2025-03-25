@@ -6,6 +6,8 @@
 #include <print>
 
 int main() {
-    std::puts("An rt key example");
+    const auto key = domainkeys::keys::create_route_key();
+    std::println("rt key size: {}", key.size());
+
     return 0;
 }

@@ -13,13 +13,13 @@ namespace domainkeys::keys {
     // timestamp key with microsecond timestamp + 4 byte random bytes converted to base62
     struct TimestampKey {
         std::array<char, TXKEY_SIZE> data;
-        constexpr size_t size() const { return TXKEY_SIZE; };
+        [[nodiscard]] size_t size() const { return data.size(); };
 
-        constexpr auto begin() const {
+        [[nodiscard]] constexpr auto begin() const {
             return data.begin();
         }
 
-        constexpr auto end() const {
+        [[nodiscard]] constexpr auto end() const {
             return data.begin() + TXKEY_SIZE;
         }
     };
@@ -27,20 +27,20 @@ namespace domainkeys::keys {
     // routing key with 4 byte route, microsecond timestamp + 4 byte random bytes converted to base62
     struct RouteKey {
         std::array<char, RTKEY_SIZE> data;
-        constexpr size_t size() const { return RTKEY_SIZE; };
+        [[nodiscard]] size_t size() const { return data.size(); };
 
-        constexpr auto begin() const {
+        [[nodiscard]] constexpr auto begin() const {
             return data.begin();
         }
 
-        constexpr auto end() const {
+        [[nodiscard]] constexpr auto end() const {
             return data.begin() + TXKEY_SIZE;
         }
     };
 
     // create a new timestamp key
-    constexpr TimestampKey create_timestamp_key();
+    TimestampKey create_timestamp_key();
 
     // create the route key
-    constexpr RouteKey create_route_key();
+    RouteKey create_route_key();
 }
