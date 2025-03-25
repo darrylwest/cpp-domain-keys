@@ -36,17 +36,19 @@ namespace domainkeys::keys {
         auto now = now_microseconds();
         auto rand = random_int();
 
-        auto s1 = domainkeys::base62::encodeBase62(now);
-        auto s2 = domainkeys::base62::encodeBase62(rand);
-        auto ss = s1 + s2;
-
-        std::println("now: {} rand: {}, ss: {} size: {}", now, rand, ss, ss.size());
+        auto ss = base62::encodeBase62(now) + base62::encodeBase62(rand);
 
         return TimestampKey{ss};
     }
 
     // create the route key
-    RouteKey create_route_key() {
-        return RouteKey("1234567890123456");
+    RouteKey create_route_key(const std::string& route) {
+        auto key = create_timestamp_key().to_string();
+        if (route.empty()) {
+            auto rt = "1234";
+            return RouteKey(rt + key);
+        } else {
+            return RouteKey("1234567890123456");
+        }
     }
 } // namespace domainkeys::keys

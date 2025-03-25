@@ -7,9 +7,8 @@
 
 int main() {
     const auto key = domainkeys::keys::create_route_key();
-    std::println("rt key size: {}", key.size());
 
-    std::println("rt key: {}", key.to_string());
+    std::puts(key.to_string().c_str());
 
     return 0;
 }

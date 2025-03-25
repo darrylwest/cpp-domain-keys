@@ -70,7 +70,7 @@ namespace domainkeys::keys {
     TimestampKey create_timestamp_key();
 
     // create the route key
-    RouteKey create_route_key();
+    RouteKey create_route_key(const std::string& route = "");
 
     // return current timestamp for now in microseconds
     std::time_t now_microseconds();
