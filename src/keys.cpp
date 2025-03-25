@@ -5,6 +5,7 @@
 #include <random>
 #include <domainkeys/keys.hpp>
 #include <domainkeys/base62.hpp>
+#include <print>
 
 namespace domainkeys::keys {
     // the min/max keeps the base62 encodeing to 3 chars 100..zzz
