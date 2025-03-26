@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(DomainKeys VERSION 0.3.2 LANGUAGES CXX)
+project(DomainKeys VERSION 0.5.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,6 +23,8 @@ find_package(Catch2 3 REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# Enable position-independent code
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Enable testing
 option(ENABLE_TESTS "Build tests" ON)
