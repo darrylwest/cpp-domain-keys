@@ -8,6 +8,7 @@
 #include <chrono>
 #include <iomanip>
 #include <set>
+#include <algorithm>
 
 auto date_to_timestamp(const int year, const int month = 12, const int day = 31) {
     std::tm tm = {0};

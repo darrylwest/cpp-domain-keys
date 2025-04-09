@@ -4,7 +4,6 @@
 #include <chrono>
 #include <domainkeys/base62.hpp>
 #include <domainkeys/keys.hpp>
-#include <print>
 #include <random>
 
 namespace domainkeys::keys {
