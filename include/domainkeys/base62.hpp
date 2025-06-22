@@ -46,7 +46,7 @@ namespace domainkeys::base62 {
      * @return The decoded integer.
      * @throws std::invalid_argument if the string contains a character not in the base62 character set.
      */
-    inline long decodeBase62(const std::string &b62_str) {
+    inline int64_t decodeBase62(const std::string &b62_str) {
         long result = 0;
 
         for (char c: b62_str) {

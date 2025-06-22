@@ -90,13 +90,15 @@ TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
 }
 
 TEST_CASE("TimestampKeys decode", "[keys][decode]") {
-    auto key = domainkeys::keys::create_timestamp_key();
-    REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
+    std::string key = "816rA9Vbu2Vm";
 
-    auto ts_part = key.to_string().substr(0, 9);
+    auto ts_part = key.substr(0, 9);
     auto ts = domainkeys::base62::decodeBase62(ts_part);
-    std::println("key: {}, sub: {}, ts: {}", key, ts_part, ts);
-    REQUIRE(ts > 0);
+    // std::println("key: {}, sub: {}, ts: {}", key, ts_part, ts);
+    REQUIRE(ts == 1750631965768802);
+
+    auto ts1 = domainkeys::keys::decode_timestamp_key(key);
+    REQUIRE(ts1 == ts);
 }
 
 TEST_CASE("TimestapKeys create", "[keys][txkey-create]") {

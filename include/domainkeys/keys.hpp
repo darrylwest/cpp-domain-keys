@@ -58,6 +58,9 @@ namespace domainkeys::keys {
     // create a new timestamp key
     TimestampKey create_timestamp_key();
 
+    // decode the microsecond timestamp from the tx key
+    int64_t decode_timestamp_key(const std::string &b62_str);
+
     // create the route key
     RouteKey create_route_key(const std::string &route = "");
 

@@ -40,6 +40,12 @@ namespace domainkeys::keys {
         return TimestampKey{ss};
     }
 
+    // decode the microsecond timestamp from the tx key
+    int64_t decode_timestamp_key(const std::string &b62_str) {
+        auto ts_part = b62_str.substr(0, 9);
+        return base62::decodeBase62(ts_part);
+    }
+
     // create the route key
     RouteKey create_route_key(const std::string &route) {
         std::string rt = route;

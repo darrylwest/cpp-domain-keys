@@ -6,10 +6,16 @@
 #include <print>
 #include <domainkeys/keys.hpp>
 
-int main() {
-    const auto key = domainkeys::keys::create_timestamp_key();
+int main(int argc, char **argv) {
+    using namespace domainkeys;
+    const auto key = keys::create_timestamp_key();
 
-    std::puts(key.to_string().c_str());
+    if (argc == 1) {
+        std::puts(key.to_string().c_str());
+    } else {
+        auto k = key.to_string();
+        std::println("{} {}", k, keys::decode_timestamp_key(k));
+    }
 
     return 0;
 }
