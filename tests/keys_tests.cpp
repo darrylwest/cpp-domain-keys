@@ -31,10 +31,22 @@ auto date_to_timestamp(const int year, const int month = 12, const int day = 31)
 }
 
 TEST_CASE("Library Version", "[version]") {
-    REQUIRE(domainkeys::keys::VERSION >= "0.5.2-105");
+    REQUIRE(domainkeys::keys::VERSION >= "0.5.5-110");
     std::string version = std::string(domainkeys::keys::VERSION);
     REQUIRE(version.size() >= 8);
     REQUIRE(version.starts_with("0.5"));
+}
+
+TEST_CASE("TimestampKeys", "[keys][timestamps,now]") {
+    using namespace domainkeys;
+    auto micros = keys::now_microseconds();
+    REQUIRE(micros > 1750632875155530);
+
+    auto millis = keys::now_milliseconds();
+    REQUIRE(millis > 1750632875155);
+
+    auto seconds = keys::now_seconds();
+    REQUIRE(seconds > 1750632);
 }
 
 TEST_CASE("TimestampKeys constructed", "[keys][txkey]") {

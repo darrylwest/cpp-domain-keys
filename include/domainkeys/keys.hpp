@@ -6,14 +6,51 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <ctime>
+#include <random>
 #include <stdexcept>
 #include <string>
 
 namespace domainkeys::keys {
-    constexpr std::string_view VERSION = "0.5.4-109";
+    constexpr std::string_view VERSION = "0.5.5-110";
+
+    // the min/max keeps the base62 encoding to 3 chars 100..zzz
     constexpr size_t TXKEY_SIZE = 12;
     constexpr size_t RTKEY_SIZE = 16;
+
+    constexpr int BASE62_MIN = 3844;
+    constexpr int BASE62_MAX = 238327;
+
+    inline std::random_device random_device; // Obtain a random number from hardware
+    inline std::mt19937 generator(random_device());
+
+    // return a random int between min/max bounds
+    inline int random_int(int min = BASE62_MIN, int max = BASE62_MAX) {
+        std::uniform_int_distribution<int> dist(min, max);
+        return dist(generator);
+    }
+
+    // return a timestamp in microseconds
+    inline std::time_t now_microseconds() {
+        using namespace std::chrono;
+        auto now = system_clock::now();
+        return duration_cast<microseconds>(now.time_since_epoch()).count();
+    }
+
+    // return a timestamp in milliseconds
+    inline std::time_t now_milliseconds() {
+        using namespace std::chrono;
+        auto now = system_clock::now();
+        return duration_cast<milliseconds>(now.time_since_epoch()).count();
+    }
+
+    // return the unix timestamp
+    inline std::time_t now_seconds() {
+        using namespace std::chrono;
+        auto now = system_clock::now();
+        return duration_cast<seconds>(now.time_since_epoch()).count();
+    }
 
     // timestamp key with microsecond timestamp + 4 byte random bytes converted to base62
     struct TimestampKey {
