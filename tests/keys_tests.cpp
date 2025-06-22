@@ -2,13 +2,15 @@
 // 2025-03-24 17:01:53 dpw
 //
 
-#include <domainkeys/keys.hpp>
-#include <catch2/catch_all.hpp>  // For Catch2 v3
-#include <print>
-#include <chrono>
-#include <iomanip>
-#include <set>
 #include <algorithm>
+#include <catch2/catch_all.hpp> // For Catch2 v3
+#include <chrono>
+#include <domainkeys/keys.hpp>
+#include <iomanip>
+#include <print>
+#include <set>
+
+#include "domainkeys/base62.hpp"
 
 auto date_to_timestamp(const int year, const int month = 12, const int day = 31) {
     std::tm tm = {0};
@@ -85,6 +87,16 @@ TEST_CASE("TimstampKeys min/max", "[keys][txkey-min-max]") {
 
     INFO("test the string length of the future date to ensure it's 17 chars");
     REQUIRE(sdt.size() == 17);
+}
+
+TEST_CASE("TimestampKeys decode", "[keys][decode]") {
+    auto key = domainkeys::keys::create_timestamp_key();
+    REQUIRE(key.size() == domainkeys::keys::TXKEY_SIZE);
+
+    auto ts_part = key.to_string().substr(0, 9);
+    auto ts = domainkeys::base62::decodeBase62(ts_part);
+    std::println("key: {}, sub: {}, ts: {}", key, ts_part, ts);
+    REQUIRE(ts > 0);
 }
 
 TEST_CASE("TimestapKeys create", "[keys][txkey-create]") {

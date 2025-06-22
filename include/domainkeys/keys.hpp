@@ -4,14 +4,14 @@
 
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <ctime>
 #include <stdexcept>
 #include <string>
-#include <algorithm>
 
 namespace domainkeys::keys {
-    constexpr std::string_view VERSION = "0.5.3-108";
+    constexpr std::string_view VERSION = "0.5.4-109";
     constexpr size_t TXKEY_SIZE = 12;
     constexpr size_t RTKEY_SIZE = 16;
 
