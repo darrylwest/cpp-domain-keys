@@ -1,16 +1,13 @@
 //
 // 2025-03-24 17:01:53 dpw
 //
+
+#include <algorithm>
 #include <chrono>
 #include <domainkeys/base62.hpp>
 #include <domainkeys/keys.hpp>
 
 namespace domainkeys::keys {
-
-    // TODO generate random int
-
-    // TODO encode to base62
-    // TODO decode base62 to int
 
     // create a new timestamp key
     TimestampKey create_timestamp_key() {

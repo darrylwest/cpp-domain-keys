@@ -13,7 +13,7 @@
 #include <string>
 
 namespace domainkeys::keys {
-    constexpr std::string_view VERSION = "0.5.5-110";
+    constexpr std::string_view VERSION = "0.5.5-112";
 
     // the min/max keeps the base62 encoding to 3 chars 100..zzz
     constexpr size_t TXKEY_SIZE = 12;
@@ -104,6 +104,4 @@ namespace domainkeys::keys {
     // create a ramdom base62 key of a specified length
     std::string create_random_key(size_t size = 16);
 
-    // return current timestamp for now in microseconds
-    std::time_t now_microseconds();
 } // namespace domainkeys::keys
