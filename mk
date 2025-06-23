@@ -88,10 +88,10 @@ do
             exit 0
         ;;
         exam*)
-            for f in build/examples/*
-            do
-                ./$f
-            done
+            ./build/examples/txkey -v
+            ./build/examples/rtkey
+            ./build/examples/rand-base62-key
+            ./build/examples/decode_txkey 816xemoY3B8L
             
             shift
         ;;
