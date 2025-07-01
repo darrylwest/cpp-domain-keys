@@ -7,13 +7,12 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
-#include <ctime>
 #include <random>
 #include <stdexcept>
 #include <string>
 
 namespace domainkeys::keys {
-    constexpr std::string_view VERSION = "0.5.5-112";
+    constexpr std::string_view VERSION = "0.5.5-113";
 
     // the min/max keeps the base62 encoding to 3 chars 100..zzz
     constexpr size_t TXKEY_SIZE = 12;
