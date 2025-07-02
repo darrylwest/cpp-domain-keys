@@ -9,7 +9,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+    container: darrylwest/ubuntu24-gpp1420:latest
     
     strategy:
       matrix:
@@ -19,14 +20,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install GCC 14.2.0 and dependencies
+    - name: Install system dependencies
       run: |
-        sudo apt update
-        sudo apt install -y gcc-14 g++-14 cmake ninja-build
-        
-        # Set GCC 14 as default
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+        apt-get update
+        apt-get install -y \
+          cmake \
+          ninja-build \
+          git
         
         # Verify installation
         gcc --version
@@ -40,15 +40,13 @@ jobs:
         git checkout v3.7.1
         cmake -B build -S . -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr/local
         cmake --build build --parallel $(nproc)
-        sudo cmake --build build --target install
+        cmake --build build --target install
         cd ..
 
     - name: Configure CMake
       run: |
         cmake -B build \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_CXX_COMPILER=g++-14 \
-          -DCMAKE_C_COMPILER=gcc-14 \
           -DCMAKE_CXX_STANDARD=23 \
           -DENABLE_TESTS=ON \
           -G Ninja
@@ -69,12 +67,18 @@ jobs:
         ./build/examples/rand-base62-key
         ./build/examples/decode_txkey 816xemoY3B8L
 
+    - name: Package artifacts
+      run: |
+        mkdir -p artifacts/lib artifacts/include artifacts/bin
+        cp build/libdomainkeys.a artifacts/lib/
+        cp -r include/* artifacts/include/
+        cp build/examples/* artifacts/bin/ 2>/dev/null || true
+        tar -czf domain-keys-ubuntu-24.10-release.tar.gz artifacts/
+        
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       if: matrix.build_type == 'Release'
       with:
-        name: libdomainkeys-linux-gcc14
-        path: |
-          build/libdomainkeys.a
-          include/
+        name: domain-keys-ubuntu-24.10-release
+        path: domain-keys-ubuntu-24.10-release.tar.gz
         retention-days: 30

@@ -10,3 +10,5 @@ ai-prompts
 logs/*.log
 datetimelib
 soxlib
+artifacts/*.tgz
+artifacts/*.tar.gz
