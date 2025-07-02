@@ -85,7 +85,7 @@ do
 
             exit 0
         ;;
-        exam*)
+        demo|exam*)
             ./build/examples/txkey -v
             ./build/examples/rtkey
             ./build/examples/rand-base62-key
