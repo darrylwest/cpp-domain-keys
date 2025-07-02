@@ -1,0 +1,74 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    
+    strategy:
+      matrix:
+        build_type: [Release, Debug]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install GCC 14.2.0 and dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y gcc-14 g++-14 cmake ninja-build
+        
+        # Set GCC 14 as default
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+        
+        # Verify installation
+        gcc --version
+        g++ --version
+        cmake --version
+
+    - name: Install Catch2
+      run: |
+        sudo apt install -y libcatch2-dev
+
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_CXX_COMPILER=g++-14 \
+          -DCMAKE_C_COMPILER=gcc-14 \
+          -DCMAKE_CXX_STANDARD=23 \
+          -DENABLE_TESTS=ON \
+          -G Ninja
+
+    - name: Build
+      run: |
+        cmake --build build --parallel $(nproc)
+
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure --parallel $(nproc)
+
+    - name: Run examples
+      run: |
+        ./build/examples/txkey -v
+        ./build/examples/rtkey
+        ./build/examples/rand-base62-key
+        ./build/examples/decode_txkey 816xemoY3B8L
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: matrix.build_type == 'Release'
+      with:
+        name: libdomainkeys-linux-gcc14
+        path: |
+          build/libdomainkeys.a
+          include/
+        retention-days: 30
