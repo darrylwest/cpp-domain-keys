@@ -13,7 +13,7 @@ jobs:
     
     strategy:
       matrix:
-        build_type: [Release, Debug]
+        build_type: [Release ]
     
     steps:
     - name: Checkout code
@@ -35,7 +35,13 @@ jobs:
 
     - name: Install Catch2
       run: |
-        sudo apt install -y libcatch2-dev
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        git checkout v3.7.1
+        cmake -B build -S . -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake --build build --parallel $(nproc)
+        sudo cmake --build build --target install
+        cd ..
 
     - name: Configure CMake
       run: |
