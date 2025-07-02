@@ -35,7 +35,7 @@ if (ENABLE_TESTS)
             domainkeys
             Catch2::Catch2WithMain
     )
-    add_test(NAME keys_tests COMMAND keys_tests)
+    add_test(NAME unit_tests COMMAND unit_tests)
 endif()
 
 # Define the static library

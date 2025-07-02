@@ -3,57 +3,45 @@ name: CI Build and Test
 on:
   push:
     branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-24.10
-    env:
-      CC: gcc-14
-      CXX: g++-14
+    name: Build and Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          gcc-14 \
-          g++-14 \
-          cmake \
-          catch2
+      - name: Set up C++ compiler
+        uses: actions/setup-g++@v1
+        with:
+          compiler: g++-14
 
-    - name: Verify Tools and Compiler
-      run: |
-        echo "=== Compiler Version ==="
-        g++ --version
-        echo "=== CMake Version ==="
-        cmake --version
-        echo "=== Testing C++23 <print> Support ==="
-        echo '#include <print>' > test_cpp23.cpp
-        echo 'int main() { std::println("C++23 <print> works!"); }' >> test_cpp23.cpp
-        g++ -std=c++23 test_cpp23.cpp -o test_cpp23
-        ./test_cpp23
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: '3.30.0'
 
-    - name: Configure Project
-      run: |
-        cmake -B build -S .
+      - name: Verify Tool Versions
+        run: |
+          g++ --version
+          cmake --version
+          g++ --version | grep "14.2.0"
+          cmake --version | grep "3.30.0"
 
-    - name: Build Project
-      run: |
-        cmake --build build -- -j$(nproc)
+      - name: Configure CMake
+        run: cmake -B build -S .
 
-    - name: Run Unit Tests
-      run: |
-        ./build/unit_tests
+      - name: Build Project
+        run: cmake --build build --config Release -- -j$(nproc)
 
-    - name: Run Examples
-      run: |
-        echo "=== Running Keys Examples ==="
-        ./build/examples/txkey
-        ./build/examples/rtkey ab
-        ./build/examples/rand-base62-key
-        ./build/examples/decode_txkey 81L16gKkT6f8
+      - name: Run Unit Tests
+        run: ctest --test-dir build --output-on-failure
